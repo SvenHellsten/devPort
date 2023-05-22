@@ -1,6 +1,7 @@
 import { CSS, render } from "https://deno.land/x/gfm/mod.ts";
 import { Head } from "$fresh/runtime.ts";
 import Counter from "../islands/Counter.tsx";
+import "https://esm.sh/prismjs@1.29.0/components/prism-json?no-check";
 
 export default function Home() {
   return (
