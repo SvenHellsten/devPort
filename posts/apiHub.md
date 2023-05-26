@@ -1,28 +1,3 @@
-import { CSS, render } from "https://deno.land/x/gfm/mod.ts";
-import { Head } from "$fresh/runtime.ts";
-import Counter from "../islands/Counter.tsx";
-// import { join } from "$std/path/mod.ts";
-import "https://esm.sh/prismjs@1.29.0/components/prism-json?no-check";
-
-export default function Home() {
-  return (
-    <main
-      data-color-mode="auto"
-      data-light-theme="light"
-      data-dark-theme="dark"
-      class="markdown-body"
-    >
-      <h1 class="text-4xl font-bold text-center">
-        API documentation visitor parking v0.2
-      </h1>
-      <div>
-        {APIPage()}
-      </div>
-    </main>
-  );
-}
-const text = await Deno.readTextFile("./posts/apiHub.md");
-const markdown = `
 # Authentication
 
 To use the Aimo API Hub, the first thing you (your company) must do is register
@@ -32,9 +7,9 @@ registering as an Aimo API Hub client, you will be provisioned with client
 credentials. These credentials will be used to authenticate requests you make to
 the API. It is through this authentication process that we can:
 
-* Verify that the traffic identifying itself as you is, in fact, you
+- Verify that the traffic identifying itself as you is, in fact, you
 
-* Establish your identity to the system
+- Establish your identity to the system
 
 These credentials are unique to each integration on the platform and consists of
 a client id and a client secret. When you have these, you can fetch your jwt by
@@ -42,13 +17,13 @@ accessing the authentication endpoint:
 
 > <b>POST localhost:8000/auth/token </b>
 
-\`\`\`json
+```json
 {
-  "grant_type": "client_credentials",
+  "grantType": "client_credentials",
   "clientId": "1o23nh8th0832lh92d92l3",
   "clientSecret": "oien23ie42n3oi4e2n3oi4en239np2ysusny23nsyu9v3h"
 }
-\`\`\`
+```
 
 This will return a Bearer token that can be used to access other endpoints.
 
@@ -62,9 +37,9 @@ This endpoint returns a list of available parking zones available to the user.
 
 > <b>GET /zones</b>
 
-Response
+<b>Response:</b>
 
-\`\`\`json
+```json
 {
   "zones": [
     {
@@ -77,7 +52,7 @@ Response
     }
   ]
 }
-\`\`\`
+```
 
 <h2>Availability</h2>
 <p>To check availability at a zone, you should specify the start and stop time of the parking duration.
@@ -95,13 +70,13 @@ Parameters
 | fromTime  | starting time, in ISO 8601      | 2023-05-01T10:00:00Z |
 | toTime    | ending time, in ISO 8601        | 2023-05-01T12:00:00Z |
 
-<b>Response:</b>
+Response
 
-\`\`\`json
+```json
 {
   "id": "SE-120",
-  "from_time": "2023-05-01T10:00Z",
-  "to_time": "2023-05-01T12:00Z",
+  "fromTime": "2023-05-01T10:00Z",
+  "toTime": "2023-05-01T12:00Z",
   "products": [
     {
       "id": "pmc-123",
@@ -115,7 +90,7 @@ Parameters
     }
   ]
 }
-\`\`\`
+```
 
 If there is not a specified product the call and subsequent response would be:
 
@@ -125,11 +100,11 @@ If there is not a specified product the call and subsequent response would be:
 
 Response
 
-\`\`\`json
+```json
 {
   "id": "SE-120",
-  "from_time": "2023-05-01T10:00:00Z",
-  "to_time": "2023-05-01T12:00:00Z",
+  "fromTime": "2023-05-01T10:00:00Z",
+  "toTime": "2023-05-01T12:00:00Z",
   "products": [
     {
       "id": "pmc-123",
@@ -163,7 +138,7 @@ Response
     }
   ]
 }
-\`\`\`
+```
 
 <h2>Booking</h2>
 <p>To complete booking a permit you can use the booking endpoint</p>
@@ -183,7 +158,7 @@ Parameters:
 
 Example Request body:
 
-\`\`\`json
+```json
 {
   "productId": "PMC123",
   "licencePlate": {
@@ -192,18 +167,18 @@ Example Request body:
   },
   "fromTime": "2023-05-24T16:37:17Z",
   "toTime": "2023-05-24T16:37:17Z",
-  "parkerData": {
-    "firstName": "Peter",
-    "lastName": "Parker",
-    "email": "peter.parker@aimo.com",
+  "parker": {
+    "firstName": "Parker",
+    "lastName": "Parkersson",
+    "email": "parker.parkersson@aimo.com",
     "phoneNumber": "+46701234567"
   }
 }
-\`\`\`
+```
 
 Response:
 
-\`\`\`json
+```json
 {
   "permitId": "permitId-001",
   "productName": "premium",
@@ -214,24 +189,4 @@ Response:
   "fromTime": "2023-05-24T16:37:17Z",
   "toTime": "2023-05-24T16:37:17Z"
 }
-\`\`\`
-`;
-
-const body = render(text, {
-  baseUrl: "https://example.com",
-});
-
-function APIPage() {
-  return (
-    <>
-      <Head>
-        <style dangerouslySetInnerHTML={{ __html: CSS }} />
-      </Head>
-      <main class="max-w-screen-md px-4 pt-16 mx-auto">
-        <div
-          dangerouslySetInnerHTML={{ __html: render(body) }}
-        />
-      </main>
-    </>
-  );
-}
+```
