@@ -30,9 +30,9 @@ registering as an Aimo API Hub client, you will be provisioned with client
 credentials. These credentials will be used to authenticate requests you make to
 the API. It is through this authentication process that we can:
 
-Verify that the traffic identifying itself as you is, in fact, you
+- Verify that the traffic identifying itself as you is, in fact, you
 
-Establish your identity to the system
+- Establish your identity to the system
 
 These credentials are unique to each integration on the platform and consists of
 a client id and a client secret. When you have these, you can fetch your jwt by
@@ -93,7 +93,7 @@ Parameters
 | fromTime  | starting time, in ISO 8601      | 2023-05-01T10:00:00Z |
 | toTime    | ending time, in ISO 8601        | 2023-05-01T12:00:00Z |
 
-Response
+<b>Response:</b>
 
 \`\`\`json
 {
@@ -106,7 +106,10 @@ Response
       "name": "basic",
       "availability": 20,
       "price": "60kr/h",
-      "cost": "120kr"
+      "calculcatedPrice": {
+        "currency": "SEK",
+        "amount": 120
+      }
     }
   ]
 }
@@ -131,21 +134,30 @@ Response
       "name": "basicflexibleParking",
       "availability": 20,
       "price": "60kr/h",
-      "cost": "120kr"
+      "calculcatedPrice": {
+        "currency": "SEK",
+        "amount": 120
+      }
     },
     {
       "id": "pmc-456",
       "name": "premium",
       "availability": 3,
       "price": "80kr/h",
-      "cost": "160kr"
+      "calculcatedPrice": {
+        "currency": "SEK",
+        "amount": 160
+      }
     },
     {
       "id": "pmc-789",
       "name": "evParking",
       "availability": 2,
       "price": "100kr/h",
-      "cost": "200kr"
+      "calculcatedPrice": {
+        "currency": "SEK",
+        "amount": 200
+      }
     }
   ]
 }
@@ -179,9 +191,9 @@ Example Request body:
   "fromTime": "2023-05-24T16:37:17Z",
   "toTime": "2023-05-24T16:37:17Z",
   "parkerData": {
-    "firstName": "Parker",
-    "lastName": "Parkersson",
-    "email": "parker.parkersson@aimo.com",
+    "firstName": "Peter",
+    "lastName": "Parker",
+    "email": "peter.parker@aimo.com",
     "phoneNumber": "+46701234567"
   }
 }
