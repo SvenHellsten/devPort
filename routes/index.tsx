@@ -23,34 +23,42 @@ export default function Home() {
 const markdown = `
 # Authentication
 
-All calls to the Aimo-API (exept auth/token) requires a jwt to verify your
-identity.
+To use the Aimo API Hub, the first thing you (your company) must do is register
+with Aimo. Contact your Aimo representative or use the following
+[form](https://aimopark.formstack.com/forms/samarbeta_med_aimo_park). Upon
+registering as an Aimo API Hub client, you will be provisioned with client
+credentials. These credentials will be used to authenticate requests you make to
+the API. It is through this authentication process that we can:
 
-First you will need your client credentials, contact the partner integration
-team to require these. They are unique to each integrator on the platform. So if
-you are an agent, you will need multiple sets of client credentials. These
-consists of a client id and a client secret.
+Verify that the traffic identifying itself as you is, in fact, you
 
-When you have these, you can fetch your jwt by accessing the authentication
-endpoint
+Establish your identity to the system
+
+These credentials are unique to each integration on the platform and consists of
+a client id and a client secret. When you have these, you can fetch your jwt by
+accessing the authentication endpoint:
 
 > <b>POST localhost:8000/auth/token </b>
 
 \`\`\`json
 {
   "grant_type": "client_credentials",
-  "client_id": "1o23nh8th0832lh92d92l3",
-  "client_secret": "oien23ie42n3oi4e2n3oi4en239np2ysusny23nsyu9v3h"
+  "clientId": "1o23nh8th0832lh92d92l3",
+  "clientSecret": "oien23ie42n3oi4e2n3oi4en239np2ysusny23nsyu9v3h"
 }
 \`\`\`
 
 This will return a Bearer token that can be used to access other endpoints.
 
+The Aimo API Hub utilises HTTPS to securely transport data across the internet.
+Only HTTPS is allowed; it is not possible to access the API using unsecured HTTP
+calls.
+
 # Zones
 
 This endpoint returns a list of available parking zones available to the user.
 
-> **GET /zones**
+> <b>GET /zones</b>
 
 Response
 
@@ -74,16 +82,16 @@ Response
 The endpoint will return the availability for each specific parking product that is available for the user at the specified zone. This productID is unique for each zone.</p>
 
 > <b>GET
-> /zones/{zone_id}/availability?productId=pmc-123&from_time=2023-05-01T10:00Z&to_time=2023-05-01T12:00Z
+> /zones/{zone_id}/availability?productId=pmc-123&from_time=2023-05-01T10:00:00Z&to_time=2023-05-01T10:00:00Z
 > </b>
 
 Parameters
 
-| Name      | Description                     | Example          |
-| --------- | ------------------------------- | ---------------- |
-| productID | a specific productID (optional) | pmc-123          |
-| fromTime  | starting time, in ISO 8601      | 2023-01-01T0600Z |
-| toTime    | ending time, in ISO 8601        | 2023-01-01T0800Z |
+| Name      | Description                     | Example              |
+| --------- | ------------------------------- | -------------------- |
+| productID | a specific productID (optional) | pmc-123              |
+| fromTime  | starting time, in ISO 8601      | 2023-05-01T10:00:00Z |
+| toTime    | ending time, in ISO 8601        | 2023-05-01T12:00:00Z |
 
 Response
 
@@ -107,7 +115,7 @@ Response
 If there is not a specified product the call and subsequent response would be:
 
 > <b>GET
-> /zones/{zone_id}/availability?to_time=2023-05-01T12:00Z&to_time=2023-05-01T12:00Z
+> /zones/{zone_id}/availability?to_time=2023-05-01T12:00:00Z&to_time=2023-05-01T12:00:00Z
 > </b>
 
 Response
@@ -115,8 +123,8 @@ Response
 \`\`\`json
 {
   "id": "SE-120",
-  "from_time": "2023-05-01T10:00Z",
-  "to_time": "2023-05-01T12:00Z",
+  "from_time": "2023-05-01T10:00:00Z",
+  "to_time": "2023-05-01T12:00:00Z",
   "products": [
     {
       "id": "pmc-123",
@@ -151,12 +159,13 @@ Response
 
 Parameters:
 
-| Name         | Description                                    | Example                               |
-| ------------ | ---------------------------------------------- | ------------------------------------- |
-| productID    | a specific productID                           | pmc-123                               |
-| licenseplate | contains the lienceplate object for the parker | {"countryCode": "S", "text":"ABC123"} |
-| fromTime     | starting time, in ISO 8601                     | 2023-01-01T0600Z                      |
-| toTime       | ending time, in ISO 8601                       | 2023-01-01T0800Z                      |
+| Name                    | Description                                    | Example                                                                                                                                         |
+| ----------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| productID               | a specific productID                           | pmc-123                                                                                                                                         |
+| licenseplate            | contains the lienceplate object for the parker | <pre>{<br> "countryCode": "S",<br> "text":"ABC123" <br>} </pre>                                                                                 |
+| fromTime                | starting time, in ISO 8601                     | 2023-05-24T14:37:17Z                                                                                                                            |
+| toTime                  | ending time, in ISO 8601                       | 2023-05-24T16:37:17Z                                                                                                                            |
+| (_optional_) parkerData | contains an object with parker data            | <pre>{<br> "firstName": "Peter", <br> "lastName":"Parker",<br> "email":"peter.parker@aimo.com", <br> "phoneNumber": "+46701234567" <br>} </pre> |
 
 Example Request body:
 
@@ -165,10 +174,16 @@ Example Request body:
   "productId": "PMC123",
   "licencePlate": {
     "countryCode": "S",
-    "licencePlateText": "ABC123"
+    "text": "ABC123"
   },
-  "fromTime": "2023-01-01T0600Z",
-  "toTime": "2023-01-01T0800Z"
+  "fromTime": "2023-05-24T16:37:17Z",
+  "toTime": "2023-05-24T16:37:17Z",
+  "parkerData": {
+    "firstName": "Parker",
+    "lastName": "Parkersson",
+    "email": "parker.parkersson@aimo.com",
+    "phoneNumber": "+46701234567"
+  }
 }
 \`\`\`
 
@@ -182,10 +197,8 @@ Response:
     "countryCode": "S",
     "text": "ABC123"
   },
-  "fromDateTime": "2023-01-01T0600Z",
-  "toDateTime": "2023-01-01T0800Z",
-  "duration": "2h",
-  "cost": "120SEK"
+  "fromTime": "2023-05-24T16:37:17Z",
+  "toTime": "2023-05-24T16:37:17Z"
 }
 \`\`\`
 `;
