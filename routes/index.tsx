@@ -13,7 +13,7 @@ export default function Home() {
       class="markdown-body"
     >
       <h1 class="text-4xl font-bold text-center">
-        API documentation visitor parking v0.2
+        API documentation visitor parking v0.3
       </h1>
       <div>
         {APIPage()}
