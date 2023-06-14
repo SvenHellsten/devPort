@@ -262,7 +262,7 @@ Response
 }
 ```
 
-<h2>Cancle permit</h2>
+<h2>Cancel permit</h2>
 <p>To cancel a booked permit. Cancellation is only allowed for permits that haven’t started. </p>
 
 > <b>POST /permits/{permit_id}/cancel</b>
