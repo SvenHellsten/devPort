@@ -15,7 +15,7 @@ These credentials are unique to each integration on the platform and consists of
 a client id and a client secret. When you have these, you can fetch your jwt by
 accessing the authentication endpoint:
 
-> <b>POST localhost:8000/auth/token </b>
+> <b>POST /auth/token </b>
 
 ```json
 {
@@ -60,30 +60,29 @@ This endpoint returns a list of available parking zones available to the user.
 <p>The endpoint will return the availability for each specific parking product that is available for the user at the specified zone. This productID is unique for each zone.</p>
 
 > <b>GET
-> /zones/{zone_id}/availability?productId=pmc-123&fromTime=2023-05-01T10:00:00Z&toTime=2023-05-01T12:00:00Z
+> /zones/{zone_id}/availability?productId=product-123&validFrom=2023-05-01T10:00:00Z&validTo=2023-05-01T12:00:00Z
 > </b>
 
 Parameters
 
-| Name      | Description                     | Example              |
-| --------- | ------------------------------- | -------------------- |
-| productID | a specific productID (optional) | pmc-123              |
-| fromTime  | starting time, in ISO 8601      | 2023-05-01T10:00:00Z |
-| toTime    | ending time, in ISO 8601        | 2023-05-01T12:00:00Z |
+| Name                 | Description                        | Example              |
+| -------------------- | ---------------------------------- | -------------------- |
+| productID (optional) | a specific productID               | product-123          |
+| validFrom            | starting time, in ISO 8601 and UTC | 2023-05-01T10:00:00Z |
+| validTo              | ending time, in ISO 8601 and UTC   | 2023-05-01T12:00:00Z |
 
 Response
 
 ```json
 {
   "id": "SE-120",
-  "fromTime": "2023-05-01T10:00:00Z",
-  "toTime": "2023-05-01T12:00:00Z",
+  "validFrom": "2023-05-01T10:00:00Z",
+  "validTo": "2023-05-01T12:00:00Z",
   "products": [
     {
-      "id": "pmc-123",
+      "id": "product-123",
       "name": "basic",
       "availability": 20,
-      "price": "60kr/h",
       "calculcatedPrice": {
         "currency": "SEK",
         "amount": 120
@@ -96,7 +95,7 @@ Response
 If there is not a specified product the call and subsequent response would be:
 
 > <b>GET
-> /zones/{zone_id}/availability?fromTime=2023-05-01T10:00:00Z&toTime=2023-05-01T12:00:00Z
+> /zones/{zone_id}/availability?validFrom=2023-05-01T10:00:00Z&validTo=2023-05-01T12:00:00Z
 > </b>
 
 Response
@@ -104,34 +103,31 @@ Response
 ```json
 {
   "id": "SE-120",
-  "fromTime": "2023-05-01T10:00:00Z",
-  "toTime": "2023-05-01T12:00:00Z",
+  "validFrom": "2023-05-01T10:00:00Z",
+  "validTo": "2023-05-01T12:00:00Z",
   "products": [
     {
-      "id": "pmc-123",
+      "id": "product-123",
       "name": "basicflexibleParking",
       "availability": 20,
-      "price": "60kr/h",
       "calculcatedPrice": {
         "currency": "SEK",
         "amount": 120
       }
     },
     {
-      "id": "pmc-456",
+      "id": "product-456",
       "name": "premium",
       "availability": 3,
-      "price": "80kr/h",
       "calculcatedPrice": {
         "currency": "SEK",
         "amount": 160
       }
     },
     {
-      "id": "pmc-789",
+      "id": "product-789",
       "name": "evParking",
       "availability": 2,
-      "price": "100kr/h",
       "calculcatedPrice": {
         "currency": "SEK",
         "amount": 200
@@ -151,23 +147,23 @@ Parameters:
 
 | Name                    | Description                                                              | Example                                                                                                                                         |
 | ----------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| productID               | a specific productID                                                     | pmc-123                                                                                                                                         |
+| productID               | a specific productID                                                     | product-123                                                                                                                                     |
 | licenseplate            | contains the lienceplate object for the parker, Country code is optional | <pre>{<br> "countryCode": "S" //optional,<br> "text":"ABC123" <br>} </pre>                                                                      |
-| fromTime                | starting time, in ISO 8601                                               | 2023-05-24T14:37:17Z                                                                                                                            |
-| toTime                  | ending time, in ISO 8601                                                 | 2023-05-24T16:37:17Z                                                                                                                            |
-| (_optional_) parkerData | contains an object with parker data                                      | <pre>{<br> "firstName": "Peter", <br> "lastName":"Parker",<br> "email":"peter.parker@aimo.com", <br> "phoneNumber": "+46701234567" <br>} </pre> |
+| validFrom               | starting time, in ISO 8601 and UTC                                       | 2023-05-24T14:37:17Z                                                                                                                            |
+| validTo                 | ending time, in ISO 8601 and UTC                                         | 2023-05-24T16:37:17Z                                                                                                                            |
+| parkerData (_optional_) | contains an object with parker data                                      | <pre>{<br> "firstName": "Peter", <br> "lastName":"Parker",<br> "email":"peter.parker@aimo.com", <br> "phoneNumber": "+46701234567" <br>} </pre> |
 
 Example Request body:
 
 ```json
 {
-  "productId": "PMC123",
+  "productId": "product123",
   "licencePlate": {
     "countryCode": "S",
     "text": "ABC123"
   },
-  "fromTime": "2023-05-24T16:37:17Z",
-  "toTime": "2023-05-24T16:37:17Z",
+  "validFrom": "2023-05-24T16:37:17Z",
+  "validTo": "2023-05-24T16:37:17Z",
   "parker": {
     "firstName": "Peter",
     "lastName": "Parker",
@@ -187,8 +183,8 @@ Response:
     "countryCode": "S",
     "text": "ABC123"
   },
-  "fromTime": "2023-05-24T16:37:17Z",
-  "toTime": "2023-05-24T16:37:17Z",
+  "validFrom": "2023-05-24T16:37:17Z",
+  "validTo": "2023-05-24T16:37:17Z",
   "calculcatedPrice": {
     "currency": "SEK",
     "amount": 200
@@ -208,13 +204,13 @@ Response
 ```json
 {
   "permitID": "permitId-001",
-  "productID": "product-abc",
+  "productID": "product123",
   "licencePlate": {
     "countryCode": "FI",
     "text": "XYZ123"
   },
-  "fromTime": "2023-05-24T16:37:17Z",
-  "toTime": "2023-05-24T16:37:17Z"
+  "validFrom": "2023-05-24T16:37:17Z",
+  "validTo": "2023-05-24T17:37:17Z"
 }
 ```
 
@@ -228,8 +224,8 @@ Parameters
 | Name                    | Description                                             | Example                                                                    |
 | ----------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------- |
 | licensePlate (optional) | contains the license plate object for the parker.       | <pre>{<br> "countryCode": "S" //optional,<br> "text":"ABC123" <br>} </pre> |
-| fromTime (optional)     | the new start time of the permit, (has to be after now) | 2023-05-24T16:37:17Z                                                       |
-| toTime (optional)       | the new start time of the permit, (has to be after now) | 2023-05-25T16:37:17Z                                                       |
+| validFrom (optional)    | the new start time of the permit, (has to be after now) | 2023-05-24T16:37:17Z                                                       |
+| validTo (optional)      | the new start time of the permit, (has to be after now) | 2023-05-25T16:37:17Z                                                       |
 
 Example Request body:
 
@@ -239,7 +235,7 @@ Example Request body:
     "countryCode": "FI",
     "text": "XYZ123"
   },
-  "toTime": "2023-05-25T16:37:17Z"
+  "validTo": "2023-05-25T16:37:17Z"
 }
 ```
 
@@ -248,13 +244,13 @@ Response
 ```json
 {
   "permitID": "permitId-001",
-  "productID": "product-abc",
+  "productID": "product123",
   "licencePlate": {
     "countryCode": "FI",
     "text": "XYZ123"
   },
-  "fromTime": "2023-05-24T16:37:17Z",
-  "toTime": "2023-05-25T16:37:17Z",
+  "validFrom": "2023-05-24T16:37:17Z",
+  "validTo": "2023-05-25T16:37:17Z",
   "calculcatedPrice": {
     "currency": "SEK",
     "amount": 300

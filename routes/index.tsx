@@ -84,16 +84,16 @@ Response
 The endpoint will return the availability for each specific parking product that is available for the user at the specified zone. This productID is unique for each zone.</p>
 
 > <b>GET
-> /zones/{zone_id}/availability?productId=pmc-123&from_time=2023-05-01T10:00:00Z&to_time=2023-05-01T10:00:00Z
+> /zones/{zone_id}/availability?productId=product-123&from_time=2023-05-01T10:00:00Z&to_time=2023-05-01T10:00:00Z
 > </b>
 
 Parameters
 
 | Name      | Description                     | Example              |
 | --------- | ------------------------------- | -------------------- |
-| productID | a specific productID (optional) | pmc-123              |
-| fromTime  | starting time, in ISO 8601      | 2023-05-01T10:00:00Z |
-| toTime    | ending time, in ISO 8601        | 2023-05-01T12:00:00Z |
+| productID | a specific productID (optional) | product-123              |
+| validFrom  | starting time, in ISO 8601      | 2023-05-01T10:00:00Z |
+| validTo    | ending time, in ISO 8601        | 2023-05-01T12:00:00Z |
 
 <b>Response:</b>
 
@@ -104,7 +104,7 @@ Parameters
   "to_time": "2023-05-01T12:00Z",
   "products": [
     {
-      "id": "pmc-123",
+      "id": "product-123",
       "name": "basic",
       "availability": 20,
       "price": "60kr/h",
@@ -132,7 +132,7 @@ Response
   "to_time": "2023-05-01T12:00:00Z",
   "products": [
     {
-      "id": "pmc-123",
+      "id": "product-123",
       "name": "basicflexibleParking",
       "availability": 20,
       "price": "60kr/h",
@@ -142,7 +142,7 @@ Response
       }
     },
     {
-      "id": "pmc-456",
+      "id": "product-456",
       "name": "premium",
       "availability": 3,
       "price": "80kr/h",
@@ -152,7 +152,7 @@ Response
       }
     },
     {
-      "id": "pmc-789",
+      "id": "product-789",
       "name": "evParking",
       "availability": 2,
       "price": "100kr/h",
@@ -175,23 +175,23 @@ Parameters:
 
 | Name                    | Description                                    | Example                                                                                                                                         |
 | ----------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| productID               | a specific productID                           | pmc-123                                                                                                                                         |
+| productID               | a specific productID                           | product-123                                                                                                                                         |
 | licenseplate            | contains the lienceplate object for the parker | <pre>{<br> "countryCode": "S",<br> "text":"ABC123" <br>} </pre>                                                                                 |
-| fromTime                | starting time, in ISO 8601                     | 2023-05-24T14:37:17Z                                                                                                                            |
-| toTime                  | ending time, in ISO 8601                       | 2023-05-24T16:37:17Z                                                                                                                            |
+| validFrom                | starting time, in ISO 8601                     | 2023-05-24T14:37:17Z                                                                                                                            |
+| validTo                  | ending time, in ISO 8601                       | 2023-05-24T16:37:17Z                                                                                                                            |
 | (_optional_) parkerData | contains an object with parker data            | <pre>{<br> "firstName": "Peter", <br> "lastName":"Parker",<br> "email":"peter.parker@aimo.com", <br> "phoneNumber": "+46701234567" <br>} </pre> |
 
 Example Request body:
 
 \`\`\`json
 {
-  "productId": "PMC123",
+  "productId": "product123",
   "licencePlate": {
     "countryCode": "S",
     "text": "ABC123"
   },
-  "fromTime": "2023-05-24T16:37:17Z",
-  "toTime": "2023-05-24T16:37:17Z",
+  "validFrom": "2023-05-24T16:37:17Z",
+  "validTo": "2023-05-24T16:37:17Z",
   "parkerData": {
     "firstName": "Peter",
     "lastName": "Parker",
@@ -211,8 +211,8 @@ Response:
     "countryCode": "S",
     "text": "ABC123"
   },
-  "fromTime": "2023-05-24T16:37:17Z",
-  "toTime": "2023-05-24T16:37:17Z"
+  "validFrom": "2023-05-24T16:37:17Z",
+  "validTo": "2023-05-24T16:37:17Z"
 }
 \`\`\`
 `;
