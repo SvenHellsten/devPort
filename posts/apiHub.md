@@ -210,7 +210,8 @@ Response
     "text": "XYZ123"
   },
   "validFrom": "2023-05-24T16:37:17Z",
-  "validTo": "2023-05-24T17:37:17Z"
+  "validTo": "2023-05-24T17:37:17Z",
+  "permitStatus": "ACTIVE"
 }
 ```
 
@@ -254,7 +255,8 @@ Response
   "calculcatedPrice": {
     "currency": "SEK",
     "amount": 300
-  }
+  },
+  "permitStatus": "ACTIVE"
 }
 ```
 
@@ -267,6 +269,24 @@ Response
 
 ```json
 {
-  "status": "OK"
+  "id": "649d8673d609e062e68bf893",
+  "productID": "831a8ce2-5cc7-46dc-9c67-f1844a080651",
+  "licensePlate": {
+    "text": "ABC123",
+    "countryCode": null
+  },
+  "validFrom": "2023-07-23T07:21:46Z",
+  "validTo": "2023-06-29T13:26:17.513238060Z",
+  "calculcatedPrice": {
+    "currency": "SEK",
+    "amount": 0
+  },
+  "parker": {
+    "firstName": "Parker",
+    "lastName": "Parkersson",
+    "email": "parker.parkersson@aimo.com",
+    "phoneNumber": "+46701234567"
+  },
+  "permitStatus": "CANCELLED"
 }
 ```
