@@ -192,7 +192,7 @@ Response:
 }
 ```
 
-# Premits
+# Permits
 
 <h2>Get permit</h2>
 <p>To get information about a permit. </p>
