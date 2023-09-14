@@ -1,11 +1,30 @@
-# Authentication
+# Aimo API Hub
 
-To use the Aimo API Hub, the first thing you (your company) must do is register
-with Aimo. Contact your Aimo representative or use the following
-[form](https://aimopark.formstack.com/forms/samarbeta_med_aimo_park). Upon
-registering as an Aimo API Hub client, you will be provisioned with client
-credentials. These credentials will be used to authenticate requests you make to
-the API. It is through this authentication process that we can:
+The Aimo API Hub is the gateway between your company and Aimo’s mobility
+services. It enables the creation of applications that can interact with Aimo’s
+mobility services, such as parking and in the future EV charging & car sharing.
+
+The hub is divided into modules, where each module serves a specific purpose for
+someone with a specific set of needs. In other words, it is a collection of API
+endpoints needed to support a user journey.
+
+| Module                  | Purpose                                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------------------------ |
+| Visitor parking         | Enables you to offer your customers and/or visitors parking within your own channels, managed by Aimo. |
+| Locations (in progress) | Expose our parking zones and connected service offerings to your users.                                |
+
+<h3>Getting started</h3>
+
+To use the Aimo API Hub, the first thing you must do is register with Aimo.
+Contact your Aimo representative or the Aimo partner integration team directly
+[here](https://aimopark.formstack.com/forms/samarbeta_med_aimo_park)
+
+<h3>Authentication</h3>
+
+All modules requires authentication to interact with. Upon registering, you will
+be provisioned with client credentials. These credentials will be used to
+authenticate requests you make to the API. It is through this authentication
+process that we can:
 
 • Verify that the traffic identifying itself as you is, in fact, you
 
@@ -17,6 +36,8 @@ accessing the authentication endpoint:
 
 > <b>POST /auth/token </b>
 
+Request body:
+
 ```json
 {
   "grantType": "client_credentials",
@@ -27,13 +48,58 @@ accessing the authentication endpoint:
 
 This will return a Bearer token that can be used to access other endpoints.
 
-The Aimo API Hub utilises HTTPS to securely transport data across the internet.
+The Aimo API Hub utilizes HTTPS to securely transport data across the internet.
 Only HTTPS is allowed; it is not possible to access the API using unsecured HTTP
 calls.
 
+# Visitor parking module
+
+The visitor parking module lets you resell Aimo's parking services via your own
+digital channels and integrated into your customer experience.
+
+As a partner you are able to book permits at Aimo parking locations close to
+your business. To activate this module, contact the partner integration team
+[here.](https://aimopark.formstack.com/forms/samarbeta_med_aimo_park)
+
+<br/>
+
+<p>The prerequisites before you can start the integration are:
+
+• The Aimo team generating a partner user for you and activating this module
+
+• Configuration of your scope as a reseller; linking the relevant parking zones
+and the products you wish to resell
+
+• Signing an agreement to let you act as a reseller.</p>
+<br/>
+
+These are some of the core concepts within this module:
+
+• <b>Zone:</b> The Aimo team generating a partner user for you and activating
+this module.
+
+• <b>Product:</b> An offer presented to the visitor with an attached price. This
+could bundle extra services or present parking in different areas within a zone.
+
+• <b>Price:</b> The price that Aimo will invoice the reseller for the parking
+session.
+
+• <b>Permit:</b> The result of a successful booking, which will link the
+visitor's car with a time and zone. This is handled in the same manner for
+automatic parking facilities as traditional parking attendant facilities.
+
+<br/>
+
+All of the below will be in context of you as a reseller. These are the
+endpoints needed to create an integration between your digital system and Aimo.
+
 # Zones
 
-This endpoint returns a list of available parking zones available to the user.
+<h3>List zones</h3>
+
+Returns a list of parking zones configured for you as a reseller. Zones contain
+metadata such as name and location, which can be used to guide the parker to the
+correct location.
 
 > <b>GET /zones</b>
 
@@ -42,34 +108,66 @@ This endpoint returns a list of available parking zones available to the user.
 ```json
 {
   "zones": [
-    {
-      "id": "SE-120",
-      "name": "Hötorget"
+    { 
+      "id":"SE-120",
+      "name":"Hötorget",
+      "zoneCode": "1234",
+      "address": {
+        "street": "Sveavägen 17",
+        "postCode": "11157",
+        "city": "Stockholm",
+        "countryCode": "SE",
+        "coordinates": {
+          "lat": 59.33481,
+          "long": 18.06345
+        },
+        products: [
+          {
+            "id": "product-1",
+            "name": "basic",
+          },
+          {
+            "id": "product-2",
+            "name": "premium",
+          }
+        ],
     },
-    {
-      "id": "SE-125",
-      "name": "Gallerian"
+    { 
+      "id":"SE-125",
+      "name":"Gallerian"
+      /../
     }
   ]
 }
 ```
 
-<h2>Availability</h2>
-<p>To check availability at a zone, you should specify the start and stop time of the parking duration.</p>
+Response attributes description
 
-<p>The endpoint will return the availability for each specific parking product that is available for the user at the specified zone. This productID is unique for each zone.</p>
+| Name     | Description                                                                                                                                                              |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| id       | Unique identifier for the zone                                                                                                                                           |
+| name     | Name of the parking zone                                                                                                                                                 |
+| zoneCode | Human readable identifier for the zone so that the parker can verify that they are at the right location. Can be found on signs at the location and also in the Aimo app |
+| address  | Address of the zone to help the parker navigate to and from the location                                                                                                 |
+
+<h3>Availability</h3>
+<p>To create a good user experience, and not receive errors at booking, you should check availability for the given start and stop time of the parking duration.
+
+This endpoint returns the availability for each specific parking product that is
+configured for you as a reseller at the specified zone. You can filter on
+product id, unique for each zone, using a query parameter. </p>
 
 > <b>GET
-> /zones/{zone_id}/availability?productId=product-123&validFrom=2023-05-01T10:00:00Z&validTo=2023-05-01T12:00:00Z
+> /zones/{zone_id}/availability?from_time=2023-05-01T10:00:00Z&to_time=2023-05-01T12:00:00Z&product_id=product-123
 > </b>
 
 Parameters
 
 | Name                 | Description                        | Example              |
 | -------------------- | ---------------------------------- | -------------------- |
-| productID (optional) | a specific productID               | product-123          |
 | validFrom            | starting time, in ISO 8601 and UTC | 2023-05-01T10:00:00Z |
 | validTo              | ending time, in ISO 8601 and UTC   | 2023-05-01T12:00:00Z |
+| productID (optional) | a specific productID               | product-123          |
 
 Response
 
@@ -82,10 +180,10 @@ Response
     {
       "id": "product-123",
       "name": "basic",
-      "availability": 20,
+      "availableSpots": 20,
       "calculcatedPrice": {
         "currency": "SEK",
-        "amount": 120
+        "amount": 220
       }
     }
   ]
@@ -109,7 +207,7 @@ Response
     {
       "id": "product-123",
       "name": "basicflexibleParking",
-      "availability": 20,
+      "availableSpots": 20,
       "calculcatedPrice": {
         "currency": "SEK",
         "amount": 120
@@ -118,16 +216,16 @@ Response
     {
       "id": "product-456",
       "name": "premium",
-      "availability": 3,
+      "availableSpots": 3,
       "calculcatedPrice": {
         "currency": "SEK",
-        "amount": 160
+        "amount": 240
       }
     },
     {
       "id": "product-789",
-      "name": "evParking",
-      "availability": 2,
+      "name": "basic+",
+      "availableSpots": 2,
       "calculcatedPrice": {
         "currency": "SEK",
         "amount": 200
@@ -137,39 +235,32 @@ Response
 }
 ```
 
-<h2>Booking</h2>
-<p>To complete booking a permit you can use the booking endpoint</p>
+<h3>Booking</h3>
+<p>The actual purchase of a permit for your visitors is done by making a booking. This endpoint is used to create a booking for a given zone and product. The result of a booking is a permit, which gives the parker permission to park at a location and for some duration.</p>
 
 > <b>POST zones/{zone_id}/booking
 > </b>
 
 Parameters:
 
-| Name                    | Description                                                              | Example                                                                                                                                         |
-| ----------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| productID               | a specific productID                                                     | product-123                                                                                                                                     |
-| licenseplate            | contains the lienceplate object for the parker, Country code is optional | <pre>{<br> "countryCode": "S" //optional,<br> "text":"ABC123" <br>} </pre>                                                                      |
-| validFrom               | starting time, in ISO 8601 and UTC                                       | 2023-05-24T14:37:17Z                                                                                                                            |
-| validTo                 | ending time, in ISO 8601 and UTC                                         | 2023-05-24T16:37:17Z                                                                                                                            |
-| parkerData (_optional_) | contains an object with parker data                                      | <pre>{<br> "firstName": "Peter", <br> "lastName":"Parker",<br> "email":"peter.parker@aimo.com", <br> "phoneNumber": "+46701234567" <br>} </pre> |
+| Name         | Description                                                                                                                                                                                                    | Example                                                                    |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| productID    | product id                                                                                                                                                                                                     | product-123                                                                |
+| licenseplate | contains the license plate object for the parker. Country code is optional. Otherwise follows [International vehicle registration code](https://en.wikipedia.org/wiki/International_vehicle_registration_code) | <pre>{<br> "countryCode": "S" //optional,<br> "text":"ABC123" <br>} </pre> |
+| validFrom    | starting time, in ISO 8601 and UTC                                                                                                                                                                             | 2023-05-24T14:37:17Z                                                       |
+| validTo      | ending time, in ISO 8601 and UTC                                                                                                                                                                               | 2023-05-24T16:37:17Z                                                       |
 
 Example Request body:
 
 ```json
 {
-  "productId": "product123",
+  "productId": "product-123",
   "licencePlate": {
     "countryCode": "S",
     "text": "ABC123"
   },
   "validFrom": "2023-05-24T16:37:17Z",
-  "validTo": "2023-05-24T16:37:17Z",
-  "parker": {
-    "firstName": "Peter",
-    "lastName": "Parker",
-    "email": "parker.parkersson@aimo.com",
-    "phoneNumber": "+46701234567"
-  }
+  "validTo": "2023-05-24T16:37:17Z"
 }
 ```
 
@@ -178,7 +269,7 @@ Response:
 ```json
 {
   "permitId": "permitId-001",
-  "productName": "premium",
+  "productID": "product-123",
   "licencePlate": {
     "countryCode": "S",
     "text": "ABC123"
@@ -194,37 +285,41 @@ Response:
 
 # Permits
 
-<h2>Get permit</h2>
+<h3>Get permit</h3>
 <p>To get information about a permit. </p>
 
 > <b>GET /permits/{permit_id}</b>
 
-Response
+Response:
 
 ```json
 {
   "permitID": "permitId-001",
-  "productID": "product123",
+  "productID": "product-123",
   "licencePlate": {
-    "countryCode": "FI",
-    "text": "XYZ123"
+    "countryCode": "S",
+    "text": "ABC123"
   },
   "validFrom": "2023-05-24T16:37:17Z",
-  "validTo": "2023-05-24T17:37:17Z",
+  "validTo": "2023-05-24T16:37:17Z",
   "permitStatus": "ACTIVE"
 }
 ```
 
-<h2>Update permit</h2>
-<p>Updates a booked permit using the given information. </p>
+Permit status can be either “ACTIVE” or “CANCELLED”. The latter means that the
+permit is no longer valid as the result of a cancel operation (see cancel
+endpoint).
+
+<h3>Update permit</h3>
+<p>If there is a need to update the permit, for example if the duration needs to be changed, or the license plate needs to be updated, the update endpoint should be used. This endpoint updates a booked permit using the given information.</p>
 
 > <b>PATCH /permits/{permit_id}</b>
 
-Parameters
+Parameters:
 
 | Name                    | Description                                             | Example                                                                    |
 | ----------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------- |
-| licensePlate (optional) | contains the license plate object for the parker.       | <pre>{<br> "countryCode": "S" //optional,<br> "text":"ABC123" <br>} </pre> |
+| licensePlate (optional) | contains the license plate object for the parker.       | <pre>{<br> "countryCode": "S" //optional,<br> "text":"XYZ123" <br>} </pre> |
 | validFrom (optional)    | the new start time of the permit, (has to be after now) | 2023-05-24T16:37:17Z                                                       |
 | validTo (optional)      | the new start time of the permit, (has to be after now) | 2023-05-25T16:37:17Z                                                       |
 
@@ -233,7 +328,7 @@ Example Request body:
 ```json
 {
   "licencePlate": {
-    "countryCode": "FI",
+    "countryCode": "S",
     "text": "XYZ123"
   },
   "validTo": "2023-05-25T16:37:17Z"
@@ -247,7 +342,7 @@ Response
   "permitID": "permitId-001",
   "productID": "product123",
   "licencePlate": {
-    "countryCode": "FI",
+    "countryCode": "S",
     "text": "XYZ123"
   },
   "validFrom": "2023-05-24T16:37:17Z",
@@ -261,7 +356,7 @@ Response
 ```
 
 <h2>Cancel permit</h2>
-<p>To cancel a booked permit. Cancellation is only allowed for permits that haven’t started. </p>
+<p>If the parker cancels her visit and the permit is no longer needed it should be marked as cancelled. Cancelled permits are invalid and will not be charged in any invoice. A cancellation is only possible for permits with a validity period that have not started yet. </p>
 
 > <b>POST /permits/{permit_id}/cancel</b>
 
@@ -280,12 +375,6 @@ Response
   "calculcatedPrice": {
     "currency": "SEK",
     "amount": 0
-  },
-  "parker": {
-    "firstName": "Parker",
-    "lastName": "Parkersson",
-    "email": "parker.parkersson@aimo.com",
-    "phoneNumber": "+46701234567"
   },
   "permitStatus": "CANCELLED"
 }

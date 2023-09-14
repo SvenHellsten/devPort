@@ -13,7 +13,7 @@ export default function Home() {
       class="markdown-body"
     >
       <h1 class="text-4xl font-bold text-center">
-        API documentation visitor parking v0.3
+        API HUB documentation v0.4
       </h1>
       <div>
         {APIPage()}
@@ -29,7 +29,7 @@ To use the Aimo API Hub, the first thing you (your company) must do is register
 with Aimo. Contact your Aimo representative or use the following
 [form](https://aimopark.formstack.com/forms/samarbeta_med_aimo_park). Upon
 registering as an Aimo API Hub client, you will be provisioned with client
-credentials. These credentials will be used to authenticate requests you make to
+credentials. These credentials will be used to authenticate requests you make tod
 the API. It is through this authentication process that we can:
 
 * Verify that the traffic identifying itself as you is, in fact, you
