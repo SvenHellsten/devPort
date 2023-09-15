@@ -8,20 +8,20 @@ The hub is divided into modules, where each module serves a specific purpose for
 someone with a specific set of needs. In other words, it is a collection of API
 endpoints needed to support a user journey.
 
-| Module                  | Purpose                                                                                                |
-| ----------------------- | ------------------------------------------------------------------------------------------------------ |
-| Visitor parking         | Enables you to offer your customers and/or visitors parking within your own channels, managed by Aimo. |
-| Locations (in progress) | Expose our parking zones and connected service offerings to your users.                                |
+| Module                       | Purpose                                                                                                |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Visitor parking              | Enables you to offer your customers and/or visitors parking within your own channels, managed by Aimo. |
+| Locations <br/>(in progress) | Enables you to expose Aimo’s locations and connected service offerings to your users.                  |
 
 <h3>Getting started</h3>
 
 To use the Aimo API Hub, the first thing you must do is register with Aimo.
 Contact your Aimo representative or the Aimo partner integration team directly
-[here](https://aimopark.formstack.com/forms/samarbeta_med_aimo_park)
+[here](mailto:anders.linden@aimopark.se)
 
 <h3>Authentication</h3>
 
-All modules requires authentication to interact with. Upon registering, you will
+All API Hub modules requires you to be authenticated. Upon registering, you will
 be provisioned with client credentials. These credentials will be used to
 authenticate requests you make to the API. It is through this authentication
 process that we can:
@@ -59,7 +59,7 @@ digital channels and integrated into your customer experience.
 
 As a partner you are able to book permits at Aimo parking locations close to
 your business. To activate this module, contact the partner integration team
-[here.](https://aimopark.formstack.com/forms/samarbeta_med_aimo_park)
+[here.](mailto:anders.linden@aimopark.se)
 
 <br/>
 
