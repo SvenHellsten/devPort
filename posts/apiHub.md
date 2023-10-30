@@ -115,7 +115,7 @@ correct location.
       "id":"SE-120",
       "name":"Hötorget",
       "zoneCode": "1234",
-      "code": "5687"
+      "accessCode": "5687",
       "address": {
         "street": "Sveavägen 17",
         "postCode": "11157",
