@@ -88,6 +88,9 @@ session.
 visitor's car with a time and zone. This is handled in the same manner for
 automatic parking facilities as traditional parking attendant facilities.
 
+• <b>FacilityAccess:</b> Some zones have specific access systems. Like a door
+with a door code that needs to be convayed to the parker.
+
 <br/>
 
 All of the below will be in context of you as a reseller. These are the
@@ -112,6 +115,7 @@ correct location.
       "id":"SE-120",
       "name":"Hötorget",
       "zoneCode": "1234",
+      "code": "5687"
       "address": {
         "street": "Sveavägen 17",
         "postCode": "11157",
@@ -143,12 +147,13 @@ correct location.
 
 Response attributes description
 
-| Name     | Description                                                                                                                                                              |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| id       | Unique identifier for the zone                                                                                                                                           |
-| name     | Name of the parking zone                                                                                                                                                 |
-| zoneCode | Human readable identifier for the zone so that the parker can verify that they are at the right location. Can be found on signs at the location and also in the Aimo app |
-| address  | Address of the zone to help the parker navigate to and from the location                                                                                                 |
+| Name       | Description                                                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| id         | Unique identifier for the zone                                                                                                                                           |
+| name       | Name of the parking zone                                                                                                                                                 |
+| zoneCode   | Human readable identifier for the zone so that the parker can verify that they are at the right location. Can be found on signs at the location and also in the Aimo app |
+| accessCode | If the zone requires a code to access, this is the current access code                                                                                                   |
+| address    | Address of the zone to help the parker navigate to and from the location                                                                                                 |
 
 <h3>Availability</h3>
 <p>To create a good user experience, and not receive errors at booking, you should check availability for the given start and stop time of the parking duration.
@@ -173,7 +178,7 @@ Response
 
 ```json
 {
-  "id": "SE-120",
+  "zoneId": "SE-120",
   "validFrom": "2023-05-01T10:00:00Z",
   "validTo": "2023-05-01T12:00:00Z",
   "products": [
@@ -200,7 +205,7 @@ Response
 
 ```json
 {
-  "id": "SE-120",
+  "zoneId": "SE-120",
   "validFrom": "2023-05-01T10:00:00Z",
   "validTo": "2023-05-01T12:00:00Z",
   "products": [
@@ -294,21 +299,53 @@ Response:
 
 ```json
 {
-  "permitID": "permitId-001",
+  "id": "permitId-001",
   "productID": "product-123",
   "licencePlate": {
     "countryCode": "S",
     "text": "ABC123"
   },
-  "validFrom": "2023-05-24T16:37:17Z",
-  "validTo": "2023-05-24T16:37:17Z",
-  "permitStatus": "ACTIVE"
+  "validFrom": "2023-05-14T16:37:17Z",
+  "validTo": "2023-05-25T16:37:17Z",
+  "permitStatus": "ACTIVE",
+  "calculcatedPrice": {
+    "currency": "SEK",
+    "amount": 400
+  },
+  "facilityAccess": {
+    "type": "DOOR_CODE",
+    "doorCodes": [
+      {
+        "validFrom": "2023-11-14",
+        "validTo": "2023-11-18",
+        "code": "1234"
+      },
+      {
+        "validFrom": "2023-11-19",
+        "validTo": "2023-11-25",
+        "code": "5678"
+      }
+    ]
+  }
 }
 ```
 
 Permit status can be either “ACTIVE” or “CANCELLED”. The latter means that the
 permit is no longer valid as the result of a cancel operation (see cancel
 endpoint).
+
+<h4>Facility Access</h4>
+If the zone is an facility with specific facility Access, the type of the facility will display that. In this case "DOOR_CODE".
+The following list shows doorCode objects, which contains information during which times, which codes will work to access the facility. The parker get all the relevant codes for their stay. So you don't need to query them again. All the information is in the permit object. In this example, their stay reaches across 2 doorcode periods.
+
+facilityAcesss
+
+| Name                | Description                                 | Content             |
+| ------------------- | ------------------------------------------- | ------------------- |
+| type                | the type of access system                   | "DOOR_CODE" or null |
+| doorCodes.validFrom | The date from when the code is valid        | 2023-11-14          |
+| doorCodes.validTo   | The date to when the code is valid          | 2023-11-18          |
+| doorCodes.code      | the access code within the defined timespan | 1234                |
 
 <h3>Update permit</h3>
 <p>If there is a need to update the permit, for example if the duration needs to be changed, or the license plate needs to be updated, the update endpoint should be used. This endpoint updates a booked permit using the given information.</p>
@@ -331,7 +368,7 @@ Example Request body:
     "countryCode": "S",
     "text": "XYZ123"
   },
-  "validTo": "2023-05-25T16:37:17Z"
+  "validTo": "2023-05-27T16:37:17Z"
 }
 ```
 
@@ -339,19 +376,34 @@ Response
 
 ```json
 {
-  "permitID": "permitId-001",
-  "productID": "product123",
+  "id": "permitId-001",
+  "productID": "product-123",
   "licencePlate": {
     "countryCode": "S",
     "text": "XYZ123"
   },
-  "validFrom": "2023-05-24T16:37:17Z",
+  "validFrom": "2023-05-14T16:37:17Z",
   "validTo": "2023-05-25T16:37:17Z",
+  "permitStatus": "ACTIVE",
   "calculcatedPrice": {
     "currency": "SEK",
-    "amount": 300
+    "amount": 400
   },
-  "permitStatus": "ACTIVE"
+  "facilityAccess": {
+    "type": "DOOR_CODE",
+    "doorCodes": [
+      {
+        "validFrom": "2023-05-14",
+        "validTo": "2023-11-18",
+        "code": "1234"
+      },
+      {
+        "validFrom": "2023-11-19",
+        "validTo": "2023-11-27",
+        "code": "5678"
+      }
+    ]
+  }
 }
 ```
 
@@ -371,7 +423,7 @@ Response
     "countryCode": null
   },
   "validFrom": "2023-07-23T07:21:46Z",
-  "validTo": "2023-06-29T13:26:17.513238060Z",
+  "validTo": "2023-06-29T13:26:17.51Z",
   "calculcatedPrice": {
     "currency": "SEK",
     "amount": 0

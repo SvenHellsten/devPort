@@ -13,7 +13,7 @@ export default function Home() {
       class="markdown-body"
     >
       <h1 class="text-4xl font-bold text-center">
-        API HUB documentation v0.4
+        API HUB documentation v0.5 - Doorcodes
       </h1>
       <div>
         {APIPage()}
