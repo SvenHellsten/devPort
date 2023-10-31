@@ -89,7 +89,7 @@ visitor's car with a time and zone. This is handled in the same manner for
 automatic parking facilities as traditional parking attendant facilities.
 
 • <b>FacilityAccess:</b> Some zones have specific access systems. Like a door
-with a door code that needs to be convayed to the parker.
+with a door code that needs to be forwarded to the parker.
 
 <br/>
 
@@ -115,7 +115,7 @@ correct location.
       "id":"SE-120",
       "name":"Hötorget",
       "zoneCode": "1234",
-      "accessCode": "5687",
+      "activeAccessCode": "5687",
       "address": {
         "street": "Sveavägen 17",
         "postCode": "11157",
@@ -147,13 +147,13 @@ correct location.
 
 Response attributes description
 
-| Name       | Description                                                                                                                                                              |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| id         | Unique identifier for the zone                                                                                                                                           |
-| name       | Name of the parking zone                                                                                                                                                 |
-| zoneCode   | Human readable identifier for the zone so that the parker can verify that they are at the right location. Can be found on signs at the location and also in the Aimo app |
-| accessCode | If the zone requires a code to access, this is the current access code                                                                                                   |
-| address    | Address of the zone to help the parker navigate to and from the location                                                                                                 |
+| Name             | Description                                                                                                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| id               | Unique identifier for the zone                                                                                                                                           |
+| name             | Name of the parking zone                                                                                                                                                 |
+| zoneCode         | Human readable identifier for the zone so that the parker can verify that they are at the right location. Can be found on signs at the location and also in the Aimo app |
+| activeAccessCode | If the zone requires a code to access, this is the current access code                                                                                                   |
+| address          | Address of the zone to help the parker navigate to and from the location                                                                                                 |
 
 <h3>Availability</h3>
 <p>To create a good user experience, and not receive errors at booking, you should check availability for the given start and stop time of the parking duration.
@@ -314,7 +314,7 @@ Response:
   },
   "facilityAccess": {
     "type": "DOOR_CODE",
-    "doorCodes": [
+    "accessCodes": [
       {
         "validFrom": "2023-11-14",
         "validTo": "2023-11-18",
@@ -335,17 +335,14 @@ permit is no longer valid as the result of a cancel operation (see cancel
 endpoint).
 
 <h4>Facility Access</h4>
-If the zone is an facility with specific facility Access, the type of the facility will display that. In this case "DOOR_CODE".
-The following list shows doorCode objects, which contains information during which times, which codes will work to access the facility. The parker get all the relevant codes for their stay. So you don't need to query them again. All the information is in the permit object. In this example, their stay reaches across 2 doorcode periods.
+<p>If the zone is located within a facility with specific facility access restrictions, the type of the facilityAccess-object will display that. In the example above "DOOR_CODE". Facility access codes are normally rotated according to a specific schedule. The following list of accessCode-objects contain information about during which times, which codes will work to access the facility. This information is meant to cover the complete permit period. In the example above, the permit period reaches across two access code periods.</p>
 
-facilityAcesss
-
-| Name                | Description                                 | Content             |
-| ------------------- | ------------------------------------------- | ------------------- |
-| type                | the type of access system                   | "DOOR_CODE" or null |
-| doorCodes.validFrom | The date from when the code is valid        | 2023-11-14          |
-| doorCodes.validTo   | The date to when the code is valid          | 2023-11-18          |
-| doorCodes.code      | the access code within the defined timespan | 1234                |
+| Name                  | Description                                 | Content             |
+| --------------------- | ------------------------------------------- | ------------------- |
+| type                  | The type of access system                   | "DOOR_CODE" or null |
+| accessCodes.validFrom | The date from when the code is valid        | 2023-11-14          |
+| accessCodes.validTo   | The date to when the code is valid          | 2023-11-18          |
+| accessCodes.code      | The access code within the defined timespan | 1234                |
 
 <h3>Update permit</h3>
 <p>If there is a need to update the permit, for example if the duration needs to be changed, or the license plate needs to be updated, the update endpoint should be used. This endpoint updates a booked permit using the given information.</p>
