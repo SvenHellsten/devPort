@@ -111,30 +111,33 @@ correct location.
 ```json
 {
   "zones": [
-    { 
+      { 
       "id":"SE-120",
       "name":"Hötorget",
       "zoneCode": "1234",
       "activeAccessCode": "5687",
-      "address": {
-        "street": "Sveavägen 17",
-        "postCode": "11157",
-        "city": "Stockholm",
-        "countryCode": "SE",
+      "location": {
+        "address": {
+          "street": "Sveavägen 17",
+          "postCode": "11157",
+          "city": "Stockholm",
+          "countryCode": "SE"
+        },
         "coordinates": {
           "lat": 59.33481,
           "long": 18.06345
+        }
+      },
+      "products": [
+        {
+          "id": "product-1",
+          "name": "basic",
         },
-        products: [
-          {
-            "id": "product-1",
-            "name": "basic",
-          },
-          {
-            "id": "product-2",
-            "name": "premium",
-          }
-        ],
+        {
+          "id": "product-2",
+          "name": "premium",
+        }
+      ],
     },
     { 
       "id":"SE-125",
@@ -153,7 +156,8 @@ Response attributes description
 | name             | Name of the parking zone                                                                                                                                                 |
 | zoneCode         | Human readable identifier for the zone so that the parker can verify that they are at the right location. Can be found on signs at the location and also in the Aimo app |
 | activeAccessCode | If the zone requires a code to access, this is the current access code                                                                                                   |
-| address          | Address of the zone to help the parker navigate to and from the location                                                                                                 |
+| location         | A location object containing an address and coordinates of the zone to help the parker navigate to and from the location.                                                |
+| products         | A list of the available products at the zone                                                                                                                             |
 
 <h3>Availability</h3>
 <p>To create a good user experience, and not receive errors at booking, you should check availability for the given start and stop time of the parking duration.
