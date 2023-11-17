@@ -432,3 +432,10 @@ Response
   "permitStatus": "CANCELLED"
 }
 ```
+
+<h2>Terms and Conditions</h2>
+<p>The Terms and Conditions can be found at the endpoint: </p>
+
+> <b>GET /terms</b>
+
+It will redirect to a pdf file with the terms and Conditions
