@@ -434,8 +434,9 @@ Response
 ```
 
 <h2>Terms and Conditions</h2>
-<p>The Terms and Conditions can be found at the endpoint: </p>
+<p>These are the terms and conditions for the parking end user and should be displayed in connection with the booking.
+They can be fetched at the /terms endpoint.</p>
 
 > <b>GET /terms</b>
 
-It will redirect to a pdf file with the terms and Conditions
+It will redirect the user to a pdf file with the terms and conditions.
